@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm> // for std::transform
 
 using namespace std;
 
@@ -38,14 +39,27 @@ public:
 
     // Getter function for name (optional)
     string getName() const { return name; }
+
+    // Function to convert name to lowercase (helper function)
+    string getNameLowerCase() const {
+        string lowerName = name;
+        transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+        return lowerName;
+    }
 };
 
-// Function to search for a Pokemon by name
+// Function to search for a Pokemon by name (case insensitive)
 void searchPokemon(const vector<Pokemon>& pokemonList, const string& searchName) {
     bool found = false;
 
+    // Convert searchName to lowercase for case insensitive comparison
+    string searchNameLower = searchName;
+    transform(searchNameLower.begin(), searchNameLower.end(), searchNameLower.begin(), ::tolower);
+
     for (const Pokemon& pokemon : pokemonList) {
-        if (pokemon.getName() == searchName) {
+        // Convert pokemon name to lowercase for case insensitive comparison
+        string pokemonNameLower = pokemon.getNameLowerCase();
+        if (pokemonNameLower == searchNameLower) {
             pokemon.displayInfo();
             found = true;
             break;  // Stop searching once found
@@ -106,8 +120,7 @@ int main() {
     // Vector to store all Generation 1 Pokemon
     vector<Pokemon> gen1Pokemon;
 
-    // Creating each Pokemon and adding it to the vector
-    gen1Pokemon.push_back(Pokemon("Bulbasaur", "Grass/Poison", 49, 49, 45, 45));
+gen1Pokemon.push_back(Pokemon("Bulbasaur", "Grass/Poison", 49, 49, 45, 45));
     gen1Pokemon.push_back(Pokemon("Ivysaur", "Grass/Poison", 62, 63, 60, 60));
     gen1Pokemon.push_back(Pokemon("Venusaur", "Grass/Poison", 82, 83, 80, 80));
     gen1Pokemon.push_back(Pokemon("Charmander", "Fire", 52, 43, 65, 39));
@@ -258,7 +271,6 @@ int main() {
     gen1Pokemon.push_back(Pokemon("Dragonite", "Dragon/Flying", 134, 95, 80, 91));
     gen1Pokemon.push_back(Pokemon("Mewtwo", "Psychic", 110, 90, 130, 106));
     gen1Pokemon.push_back(Pokemon("Mew", "Psychic", 100, 100, 100, 100));
-    
 
     // Display menu and handle user input
     displayMenu(gen1Pokemon);
